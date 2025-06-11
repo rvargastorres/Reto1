@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz IA - Aumenta tus ingresos con Inteligencia Artificial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .question-card {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .option-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .scale-option {
+            transition: all 0.2s ease;
+        }
+        .scale-option:hover {
+            transform: scale(1.05);
+        }
+        .scale-option.active {
+            background-color: #2A5C9A;
+            color: white;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
+        <!-- Progress Bar -->
+        <div class="h-2 bg-gray-200">
+            <div id="progress" class="h-full bg-blue-600 progress-bar" style="width: 0%"></div>
+        </div>
+
+        <!-- Timer -->
+        <div class="px-6 py-2 text-right text-gray-500 text-sm">
+            <i class="far fa-clock mr-1"></i>
+            <span id="timer">Tiempo estimado: 2 min</span>
+        </div>
+
+        <div id="quiz-container" class="p-6 md:p-8">
+            <!-- Intro Screen -->
+            <div id="intro" class="question-card text-center">
+                <div class="mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-blue-800 mb-4">Descubre cómo la IA puede aumentar tus ingresos</h1>
+                    <p class="text-gray-600 text-lg mb-8">Responde este quiz de 2 minutos y obtén un plan personalizado</p>
+                    <div class="w-32 h-32 mx-auto mb-8">
+                        <i class="fas fa-robot text-blue-500 text-6xl"></i>
+                        <div class="text-blue-500 font-bold mt-2">IA + Ingresos</div>
+                    </div>
+                    <button onclick="nextQuestion()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-200 transform hover:scale-105">
+                        Comenzar Quiz <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 1: Gender -->
+            <div id="q1" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 1 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cuál es tu género?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'gender', 'Hombre')">
+                        <i class="fas fa-mars text-blue-500 text-3xl mb-3"></i>
+                        <h4 class="font-medium text-gray-800">Hombre</h4>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'gender', 'Mujer')">
+                        <i class="fas fa-venus text-pink-500 text-3xl mb-3"></i>
+                        <h4 class="font-medium text-gray-800">Mujer</h4>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'gender', 'Otro')">
+                        <i class="fas fa-genderless text-purple-500 text-3xl mb-3"></i>
+                        <h4 class="font-medium text-gray-800">Otro</h4>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next1">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 2: Age -->
+            <div id="q2" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 2 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cuál es tu rango de edad?</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'age', '18-24')">
+                        <h4 class="font-medium text-gray-800">18-24</h4>
+                    </div>
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'age', '25-34')">
+                        <h4 class="font-medium text-gray-800">25-34</h4>
+                    </div>
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'age', '35-44')">
+                        <h4 class="font-medium text-gray-800">35-44</h4>
+                    </div>
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'age', '45+')">
+                        <h4 class="font-medium text-gray-800">45+</h4>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next2">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 3: Work Situation -->
+            <div id="q3" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 3 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cuál es tu situación laboral?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'work', 'Empleado 9-5')">
+                        <div class="flex items-center">
+                            <i class="fas fa-briefcase text-blue-500 text-2xl mr-4"></i>
+                            <h4 class="font-medium text-gray-800">Empleado 9-5</h4>
+                        </div>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'work', 'Freelance')">
+                        <div class="flex items-center">
+                            <i class="fas fa-laptop-code text-green-500 text-2xl mr-4"></i>
+                            <h4 class="font-medium text-gray-800">Freelance</h4>
+                        </div>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'work', 'Desempleado')">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-clock text-yellow-500 text-2xl mr-4"></i>
+                            <h4 class="font-medium text-gray-800">Desempleado</h4>
+                        </div>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'work', 'Jubilado')">
+                        <div class="flex items-center">
+                            <i class="fas fa-umbrella-beach text-red-500 text-2xl mr-4"></i>
+                            <h4 class="font-medium text-gray-800">Jubilado</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next3">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 4: AI Knowledge -->
+            <div id="q4" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 4 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cómo calificas tu conocimiento actual de IA?</h3>
+                <p class="text-gray-600 mb-6">(1 = Principiante, 5 = Experto)</p>
+                <div class="flex flex-wrap justify-between mb-8">
+                    <div class="scale-option w-16 h-16 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer m-1" onclick="selectScale(this, 'knowledge', 1)">1</div>
+                    <div class="scale-option w-16 h-16 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer m-1" onclick="selectScale(this, 'knowledge', 2)">2</div>
+                    <div class="scale-option w-16 h-16 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer m-1" onclick="selectScale(this, 'knowledge', 3)">3</div>
+                    <div class="scale-option w-16 h-16 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer m-1" onclick="selectScale(this, 'knowledge', 4)">4</div>
+                    <div class="scale-option w-16 h-16 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer m-1" onclick="selectScale(this, 'knowledge', 5)">5</div>
+                </div>
+                <div class="flex justify-between w-full px-4">
+                    <span class="text-sm text-gray-600">Principiante</span>
+                    <span class="text-sm text-gray-600">Experto</span>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next4">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 5: AI Tools -->
+            <div id="q5" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 5 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Qué herramientas de IA has usado?</h3>
+                <p class="text-gray-600 mb-6">(Puedes seleccionar varias)</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="toggleSelect(this, 'tools', 'ChatGPT')">
+                        <img src="https://logo.clearbit.com/openai.com" alt="ChatGPT" class="w-12 h-12 mx-auto mb-2 object-contain">
+                        <h4 class="font-medium text-gray-800">ChatGPT</h4>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="toggleSelect(this, 'tools', 'MidJourney')">
+                        <img src="https://logo.clearbit.com/midjourney.com" alt="MidJourney" class="w-12 h-12 mx-auto mb-2 object-contain">
+                        <h4 class="font-medium text-gray-800">MidJourney</h4>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="toggleSelect(this, 'tools', 'Copilot')">
+                        <img src="https://logo.clearbit.com/github.com" alt="Copilot" class="w-12 h-12 mx-auto mb-2 object-contain">
+                        <h4 class="font-medium text-gray-800">Copilot</h4>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="toggleSelect(this, 'tools', 'Bard')">
+                        <img src="https://logo.clearbit.com/google.com" alt="Bard" class="w-12 h-12 mx-auto mb-2 object-contain">
+                        <h4 class="font-medium text-gray-800">Bard</h4>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="toggleSelect(this, 'tools', 'Claude')">
+                        <img src="https://logo.clearbit.com/anthropic.com" alt="Claude" class="w-12 h-12 mx-auto mb-2 object-contain">
+                        <h4 class="font-medium text-gray-800">Claude</h4>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="toggleSelect(this, 'tools', 'Otra')">
+                        <i class="fas fa-ellipsis-h text-gray-500 text-3xl mb-2"></i>
+                        <h4 class="font-medium text-gray-800">Otra</h4>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <input type="text" id="other-tool" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="¿Cuál otra herramienta has usado?">
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 6: Daily Time -->
+            <div id="q6" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 6 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cuánto tiempo puedes dedicar diariamente al aprendizaje?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'time', '5 min')">
+                        <h4 class="font-medium text-gray-800">5 min</h4>
+                        <p class="text-sm text-gray-500 mt-1">Microaprendizaje</p>
+                    </div>
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'time', '10 min')">
+                        <h4 class="font-medium text-gray-800">10 min</h4>
+                        <p class="text-sm text-gray-500 mt-1">Pausa para café</p>
+                    </div>
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'time', '15 min')">
+                        <h4 class="font-medium text-gray-800">15 min</h4>
+                        <p class="text-sm text-gray-500 mt-1">Compromiso medio</p>
+                    </div>
+                    <div class="option-card p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'time', '20 min')">
+                        <h4 class="font-medium text-gray-800">20 min</h4>
+                        <p class="text-sm text-gray-500 mt-1">Compromiso alto</p>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next6">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 7: Challenges -->
+            <div id="q7" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 7 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Qué te impide ganar más dinero actualmente?</h3>
+                <p class="text-gray-600 mb-6">(Puedes seleccionar varias opciones)</p>
+                <div class="space-y-4">
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="toggleSelect(this, 'challenges', 'Falta de habilidades')">
+                        <div class="flex items-center">
+                            <i class="fas fa-graduation-cap text-purple-500 mr-4 text-xl"></i>
+                            <h4 class="font-medium text-gray-800">Falta de habilidades</h4>
+                        </div>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="toggleSelect(this, 'challenges', 'Tareas repetitivas')">
+                        <div class="flex items-center">
+                            <i class="fas fa-redo text-blue-500 mr-4 text-xl"></i>
+                            <h4 class="font-medium text-gray-800">Tareas repetitivas</h4>
+                        </div>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="toggleSelect(this, 'challenges', 'Tiempo limitado')">
+                        <div class="flex items-center">
+                            <i class="far fa-clock text-yellow-500 mr-4 text-xl"></i>
+                            <h4 class="font-medium text-gray-800">Tiempo limitado</h4>
+                        </div>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="toggleSelect(this, 'challenges', 'No sé cómo monetizar')">
+                        <div class="flex items-center">
+                            <i class="fas fa-dollar-sign text-green-500 mr-4 text-xl"></i>
+                            <h4 class="font-medium text-gray-800">No sé cómo monetizar</h4>
+                        </div>
+                    </div>
+                    <div class="option-card selectable p-4 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="toggleSelect(this, 'challenges', 'Otro')">
+                        <div class="flex items-center">
+                            <i class="fas fa-ellipsis-h text-gray-500 mr-4 text-xl"></i>
+                            <h4 class="font-medium text-gray-800">Otro</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <input type="text" id="other-challenge" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="¿Cuál otro desafío enfrentas?">
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 8: Main Goal -->
+            <div id="q8" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 8 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cuál es tu objetivo principal con la IA?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'goal', 'Libertad financiera')">
+                        <i class="fas fa-money-bill-wave text-green-500 text-3xl mb-3"></i>
+                        <h4 class="font-medium text-gray-800 mb-2">Libertad financiera</h4>
+                        <p class="text-sm text-gray-500">Independencia económica para vivir como quieras</p>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'goal', 'Comprar una casa')">
+                        <i class="fas fa-home text-blue-500 text-3xl mb-3"></i>
+                        <h4 class="font-medium text-gray-800 mb-2">Comprar una casa</h4>
+                        <p class="text-sm text-gray-500">Obtener el capital para tu vivienda ideal</p>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500 text-center" onclick="selectOption(this, 'goal', 'Cambiar de carrera')">
+                        <i class="fas fa-briefcase text-purple-500 text-3xl mb-3"></i>
+                        <h4 class="font-medium text-gray-800 mb-2">Cambiar de carrera</h4>
+                        <p class="text-sm text-gray-500">Transicionar a un trabajo mejor remunerado</p>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next8">
+                        Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 9: Focus -->
+            <div id="q9" class="question-card hidden">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">Pregunta 9 de 9</h2>
+                <h3 class="text-2xl font-bold text-blue-800 mb-6">¿Cómo te sientes con tu enfoque actual?</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'focus', 'Enfocado fácilmente')">
+                        <div class="flex items-center">
+                            <i class="fas fa-bullseye text-green-500 mr-4 text-2xl"></i>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Enfocado fácilmente</h4>
+                                <p class="text-sm text-gray-500 mt-1">Puedo concentrarme en mis metas sin distracciones</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'focus', 'A veces distraído')">
+                        <div class="flex items-center">
+                            <i class="fas fa-brain text-yellow-500 mr-4 text-2xl"></i>
+                            <div>
+                                <h4 class="font-medium text-gray-800">A veces distraído</h4>
+                                <p class="text-sm text-gray-500 mt-1">Tengo dificultades para mantener el foco</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="option-card p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer transition duration-200 hover:border-blue-500" onclick="selectOption(this, 'focus', 'Procrastino mucho')">
+                        <div class="flex items-center">
+                            <i class="fas fa-hourglass-half text-red-500 mr-4 text-2xl"></i>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Procrastino mucho</h4>
+                                <p class="text-sm text-gray-500 mt-1">Postergo mis metas con frecuencia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevQuestion()" class="text-gray-600 hover:text-blue-600 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i> Anterior
+                    </button>
+                    <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full disabled:opacity-50" disabled id="next9">
+                        Ver resultados <i class="fas fa-chart-bar ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="results" class="question-card hidden">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-blue-800 mb-4">¡Tu plan personalizado está listo!</h1>
+                    <p class="text-gray-600 mb-4">Basado en tus respuestas, hemos creado este plan de 4 semanas para aumentar tus ingresos con IA</p>
+                    
+                    <div class="flex justify-center mb-8">
+                        <div class="bg-blue-100 text-blue-800 px-6 py-2 rounded-full font-medium inline-flex items-center">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Tu puntuación: <span id="score" class="ml-1 font-bold">83%</span> - ¡Listo para comenzar!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-user mr-2"></i> Tu perfil actual
+                        </h3>
+                        <ul class="space-y-3">
+                            <li id="result-gender" class="flex items-start"><i class="fas fa-user-circle mt-1 mr-2 text-blue-500"></i> <span>...</span></li>
+                            <li id="result-age" class="flex items-start"><i class="far fa-calendar-alt mt-1 mr-2 text-blue-500"></i> <span>...</span></li>
+                            <li id="result-work" class="flex items-start"><i class="fas fa-briefcase mt-1 mr-2 text-blue-500"></i> <span>...</span></li>
+                            <li id="result-knowledge" class="flex items-start"><i class="fas fa-brain mt-1 mr-2 text-blue-500"></i> <span>...</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-bullseye mr-2"></i> Tus objetivos
+                        </h3>
+                        <ul class="space-y-3">
+                            <li id="result-goal" class="flex items-start"><i class="fas fa-flag mt-1 mr-2 text-green-500"></i> <span>...</span></li>
+                            <li id="result-time" class="flex items-start"><i class="far fa-clock mt-1 mr-2 text-green-500"></i> <span>...</span></li>
+                            <li id="result-challenges" class="flex items-start"><i class="fas fa-roadblock mt-1 mr-2 text-green-500"></i> <span>...</span></li>
+                            <li id="result-focus" class="flex items-start"><i class="fas fa-eye mt-1 mr-2 text-green-500"></i> <span>...</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Plan de 4 semanas</h2>
+                
+                <div class="space-y-6 mb-8">
+                    <!-- Week 1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="sm:flex">
+                            <div class="sm:w-1/4 bg-blue-600 text-white p-6 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold mb-2">1</div>
+                                    <div class="text-lg font-medium">Semana</div>
+                                </div>
+                            </div>
+                            <div class="sm:w-3/4 p-6">
+                                <h3 class="text-xl font-bold text-blue-800 mb-3">Automatización con ChatGPT</h3>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Automatización</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Flujos de trabajo</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Ahorro de tiempo</span>
+                                </div>
+                                <p class="text-gray-700 mb-4">Aprenderás a automatizar tareas repetitivas usando prompts avanzados, creando plantillas reutilizables e integrando ChatGPT con otras herramientas.</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <span id="time-week1">15 min/día</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Week 2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="sm:flex">
+                            <div class="sm:w-1/4 bg-green-600 text-white p-6 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold mb-2">2</div>
+                                    <div class="text-lg font-medium">Semana</div>
+                                </div>
+                            </div>
+                            <div class="sm:w-3/4 p-6">
+                                <h3 class="text-xl font-bold text-green-800 mb-3">Creación de contenido con MidJourney</h3>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Imágenes IA</span>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Branding</span>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Visuales únicos</span>
+                                </div>
+                                <p class="text-gray-700 mb-4">Dominarás la creación de imágenes profesionales con IA generativa para uso comercial, aprendiendo técnicas avanzadas de prompting y estilización.</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <span id="time-week2">15 min/día</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Week 3 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="sm:flex">
+                            <div class="sm:w-1/4 bg-purple-600 text-white p-6 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold mb-2">3</div>
+                                    <div class="text-lg font-medium">Semana</div>
+                                </div>
+                            </div>
+                            <div class="sm:w-3/4 p-6">
+                                <h3 class="text-xl font-bold text-purple-800 mb-3">Análisis de datos con Copilot</h3>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Datos</span>
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Toma de decisiones</span>
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">Insights</span>
+                                </div>
+                                <p class="text-gray-700 mb-4">Convertirás datos en decisiones estratégicas usando Copilot para analizar información de mercado, tendencias y oportunidades de ingresos.</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <span id="time-week3">15 min/día</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Week 4 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="sm:flex">
+                            <div class="sm:w-1/4 bg-red-600 text-white p-6 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold mb-2">4</div>
+                                    <div class="text-lg font-medium">Semana</div>
+                                </div>
+                            </div>
+                            <div class="sm:w-3/4 p-6">
+                                <h3 class="text-xl font-bold text-red-800 mb-3">Estrategia de monetización</h3>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Modelos</span>
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Automatizar</span>
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Escalar</span>
+                                </div>
+                                <p class="text-gray-700 mb-4">Aprenderás a crear múltiples fuentes de ingresos automatizadas, combinando todas las herramientas aprendidas en un sistema escalable.</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>
+                                    <span id="time-week4">15 min/día</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Testimonial -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-quote-left text-blue-500 mr-2"></i> No estás solo en este viaje
+                        </h3>
+                        <div class="bg-blue-50 p-5 rounded-lg mb-4">
+                            <p class="italic text-gray-700 mb-3">"¡Automaticé el 80% de mi trabajo administrativo en solo 2 semanas con las técnicas de este plan! Ahora tengo tiempo para proyectos que generan 3 veces más ingresos."</p>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold mr-3">ML</div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">@MariaL</h4>
+                                    <p class="text-sm text-gray-500">Antes: Asistente administrativa | Ahora: Consultora de eficiencia</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm">Más de 2,300 estudiantes ya han transformado su situación financiera con este método.</p>
+                    </div>
+                    
+                    <!-- Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-chart-bar text-blue-500 mr-2"></i> Tu progreso previsto
+                        </h3>
+                        <div class="h-48 flex items-end space-x-2">
+                            <div class="w-1/5 h-1/3 bg-blue-200 rounded-t flex items-end justify-center">
+                                <div class="w-full bg-blue-400 rounded-t h-full"></div>
+                            </div>
+                            <div class="w-1/5 h-1/2 bg-blue-200 rounded-t flex items-end justify-center">
+                                <div class="w-full bg-blue-500 rounded-t h-2/3"></div>
+                            </div>
+                            <div class="w-1/5 h-2/3 bg-blue-200 rounded-t flex items-end justify-center">
+                                <div class="w-full bg-blue-600 rounded-t h-4/5"></div>
+                            </div>
+                            <div class="w-1/5 h-full bg-blue-200 rounded-t flex items-end justify-center">
+                                <div class="w-full bg-blue-700 rounded-t h-1/2"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-600 mt-2">
+                            <span>Ahora</span>
+                            <span>Después de 4 semanas</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center mb-2">
+                                <div class="w-3 h-3 bg-blue-400 rounded-full mr-2"></div>
+                                <span class="text-sm text-gray-700">Habilidades IA: Moderado → Alto</span>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <div class="w-3 h-3 bg-blue-600 rounded-full mr-2"></div>
+                                <span class="text-sm text-gray-700">Tiempo libre: +10h/semana</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-blue-700 rounded-full mr-2"></div>
+                                <span class="text-sm text-gray-700">Ingresos potenciales: +35%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden inputs for form submission -->
+                <input type="hidden" id="final-gender">
+                <input type="hidden" id="final-age">
+                <input type="hidden" id="final-work">
+                <input type="hidden" id="final-knowledge">
+                <input type="hidden" id="final-tools">
+                <input type="hidden" id="final-time">
+                <input type="hidden" id="final-challenges">
+                <input type="hidden" id="final-goal">
+                <input type="hidden" id="final-focus">
+                <input type="hidden" id="final-email">
+
+                <div class="mt-8 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-6 text-white">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-4 md:mb-0 md:w-2/3">
+                            <h3 class="text-xl font-bold mb-2">¡Obtén un 60% de descuento en tu plan de 4 semanas!</h3>
+                            <p class="text-blue-100 mb-4">Inscríbete ahora y recibe acceso completo a todos los recursos, plantillas y soporte personalizado.</p>
+                            <div class="bg-white text-blue-800 px-3 py-1 rounded-full font-bold inline-block mb-4">
+                                Garantía: Reembolso completo en 30 días si no ves resultados
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3">
+                            <div class="text-center">
+                                <div class="text-lg text-blue-100 mb-1">¡Por el precio de un café al día, transforma tus próximas 4 semanas!</div>
+                                <div class="text-3xl font-bold">2,40€<span class="text-lg"> /día ¨Un Café¨</span></div>
+                                <div class="text-sm text-blue-200 line-through">720€ (precio total)</div>
+                            </div>
+                            <button 
+                                onclick="window.location.href='#checkout'"
+                                class="w-full mt-4 bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold py-3 px-6 rounded-full transition duration-200 transform hover:scale-105">
+                                Comenzar ahora <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="generatePDF()" class="bg-white hover:bg-gray-100 text-blue-700 border-2 border-blue-600 font-medium py-2 px-6 rounded-full transition duration-200">
+                        <i class="fas fa-file-pdf mr-2"></i> Descargar PDF
+                    </button>
+                    <button onclick="showEmailModal()" class="bg-white hover:bg-gray-100 text-blue-700 border-2 border-blue-600 font-medium py-2 px-6 rounded-full transition duration-200">
+                        <i class="fas fa-paper-plane mr-2"></i> Enviar a mi email
+                    </button>
+                </div>
+
+                <div class="mt-8 text-center text-gray-500 text-sm">
+                    <p>Preguntas? Contáctanos en <a href="mailto:soporte@iaincome.com" class="text-blue-600 hover:underline">soporte@iaincome.com</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div id="emailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-xl p-6 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-blue-800">Envíame los resultados</h3>
+                <button onclick="hideEmailModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-4">Ingresa tu email para recibir tu plan personalizado y un resumen de los resultados.</p>
+            <input type="email" id="userEmail" placeholder="tucorreo@ejemplo.com" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <div class="flex justify-end gap-4">
+                <button onclick="hideEmailModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium">Cancelar</button>
+                <button onclick="sendResultsToEmail()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentQuestion = 0;
+        let responses = {
+            gender: null,
+            age: null,
+            work: null,
+            knowledge: null,
+            tools: [],
+            time: null,
+            challenges: [],
+            goal: null,
+            focus: null
+        };
+        let totalQuestions = 9;
+
+        // DOM elements
+        const questions = [
+            'intro', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'results'
+        ];
+        
+        // Timer functionality
+        let quizDuration = 120; // 2 minutes in seconds
+        let timerInterval;
+        
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(function() {
+                quizDuration--;
+                updateTimerDisplay();
+                if (quizDuration <= 0) {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(quizDuration / 60);
+            const seconds = quizDuration % 60;
+            document.getElementById('timer').textContent = 
+                `Tiempo restante: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        }
+        
+        // Navigation functions
+        function showQuestion(index) {
+            questions.forEach((q, i) => {
+                document.getElementById(q).classList.toggle('hidden', i !== index);
+            });
+            
+            // Update progress bar
+            const progress = Math.min(100, index * (100 / totalQuestions));
+            document.getElementById('progress').style.width = `${progress}%`;
+            
+            // Start timer when first real question begins
+            if (index === 1 && !timerInterval) {
+                startTimer();
+            }
+            
+            // Update current question
+            currentQuestion = index;
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                // Special handling for multiselect questions
+                if (currentQuestion === 4) { // Tools question
+                    const otherTool = document.getElementById('other-tool').value.trim();
+                    if (otherTool && !responses.tools.includes(otherTool)) {
+                        responses.tools.push(otherTool);
+                    }
+                }
+                if (currentQuestion === 6) { // Challenges question
+                    const otherChallenge = document.getElementById('other-challenge').value.trim();
+                    if (otherChallenge && !responses.challenges.includes(otherChallenge)) {
+                        responses.challenges.push(otherChallenge);
+                    }
+                }
+                
+                showQuestion(currentQuestion + 1);
+                
+                // If we're going to results, show them
+                if (currentQuestion + 1 === questions.length - 1) {
+                    displayResults();
+                }
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+        
+        // Answer selection functions
+        function selectOption(element, question, value) {
+            // Remove selected class from all options in this question
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.option-card');
+            options.forEach(opt => {
+                opt.classList.remove('border-blue-500', 'bg-blue-50');
+                opt.querySelector('i')?.classList?.remove('text-white');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('border-blue-500', 'bg-blue-50');
+            if (element.querySelector('i')) {
+                element.querySelector('i').classList.add('text-white');
+            }
+            
+            // Store response
+            responses[question] = value;
+            
+            // Enable next button
+            document.getElementById(`next${currentQuestion}`)?.removeAttribute('disabled');
+        }
+        
+        function selectScale(element, question, value) {
+            // Remove active class from all scale options
+            const scales = document.querySelectorAll('.scale-option');
+            scales.forEach(scale => {
+                scale.classList.remove('active', 'bg-blue-500', 'text-white');
+            });
+            
+            // Add active class to clicked option
+            element.classList.add('active', 'bg-blue-500', 'text-white');
+            
+            // Store response
+            responses[question] = value;
+            
+            // Enable next button
+            document.getElementById(`next${currentQuestion}`)?.removeAttribute('disabled');
+        }
+        
+        function toggleSelect(element, question, value) {
+            // Toggle selected class
+            element.classList.toggle('border-blue-500');
+            element.classList.toggle('bg-blue-50');
+            
+            // Update responses array
+            if (element.classList.contains('border-blue-500')) {
+                if (!responses[question].includes(value)) {
+                    responses[question].push(value);
+                }
+            } else {
+                const index = responses[question].indexOf(value);
+                if (index > -1) {
+                    responses[question].splice(index, 1);
+                }
+            }
+        }
+        
+        // Results display
+        function displayResults() {
+            // Basic info
+            document.getElementById('result-gender').querySelector('span').textContent = responses.gender || 'No especificado';
+            document.getElementById('result-age').querySelector('span').textContent = responses.age || 'No especificado';
+            document.getElementById('result-work').querySelector('span').textContent = responses.work || 'No especificado';
+            document.getElementById('result-knowledge').querySelector('span').textContent = `Nivel ${responses.knowledge || 1}/5`;
+            document.getElementById('result-goal').querySelector('span').textContent = responses.goal || 'No especificado';
+            document.getElementById('result-time').querySelector('span').textContent = responses.time || 'No especificado';
+            document.getElementById('result-focus').querySelector('span').textContent = responses.focus || 'No especificado';
+            
+            // Challenges (join array with commas)
+            document.getElementById('result-challenges').querySelector('span').textContent = 
+                responses.challenges.join(', ') || 'No especificados';
+            
+            // Update weekly time based on user's selected daily time
+            const weeklyTime = responses.time || '15 min';
+            document.getElementById('time-week1').textContent = weeklyTime + '/día';
+            document.getElementById('time-week2').textContent = weeklyTime + '/día';
+            document.getElementById('time-week3').textContent = weeklyTime + '/día';
+            document.getElementById('time-week4').textContent = weeklyTime + '/día';
+            
+            // Calculate score (basic example)
+            let score = 70; // Base score
+            if (responses.knowledge > 3) score += 10;
+            if (responses.time === '20 min') score += 5;
+            if (responses.focus === 'Enfocado fácilmente') score += 8;
+            
+            // Cap at 100
+            score = Math.min(100, score);
+            document.getElementById('score').textContent = score + '%';
+            
+            // Set hidden form fields
+            document.getElementById('final-gender').value = responses.gender;
+            document.getElementById('final-age').value = responses.age;
+            document.getElementById('final-work').value = responses.work;
+            document.getElementById('final-knowledge').value = responses.knowledge;
+            document.getElementById('final-tools').value = responses.tools.join(', ');
+            document.getElementById('final-time').value = responses.time;
+            document.getElementById('final-challenges').value = responses.challenges.join(', ');
+            document.getElementById('final-goal').value = responses.goal;
+            document.getElementById('final-focus').value = responses.focus;
+        }
+        
+        // PDF generation
+        function generatePDF() {
+            alert('Función de generación de PDF simulada. En una implementación real, esto generaría un PDF con los resultados.');
+            // In a real implementation, you would use a library like jsPDF
+            // to generate a PDF document with the results
+        }
+        
+        // Email modal functions
+        function showEmailModal() {
+            document.getElementById('emailModal').classList.remove('hidden');
+        }
+        
+        function hideEmailModal() {
+            document.getElementById('emailModal').classList.add('hidden');
+            document.getElementById('userEmail').value = '';
+        }
+        
+        function sendResultsToEmail() {
+            const email = document.getElementById('userEmail').value.trim();
+            if (email) {
+                // Validate email
+                if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+                    alert('Por favor ingresa un email válido.');
+                    return;
+                }
+                
+                // Store email
+                responses.email = email;
+                document.getElementById('final-email').value = email;
+                
+                // Simulate sending
+                alert(`Se ha enviado un correo con tus resultados a ${email}`);
+                hideEmailModal();
+            } else {
+                alert('Por favor ingresa tu dirección de correo electrónico.');
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showQuestion(0); // Show intro screen
+            
+            // Add event listeners for keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    if (currentQuestion < questions.length - 1) {
+                        nextQuestion();
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    if (currentQuestion > 0) {
+                        prevQuestion();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
